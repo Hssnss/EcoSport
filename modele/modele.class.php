@@ -4,14 +4,19 @@ class Modele
 {
     private $unPdo ; // attribut de la classe
 
-    public function __construct ()
+    public function __construct ($serveur, $serveur2, $bdd, $user, $mdp, $mdp2)
     {
         try {
-            $this->unPdo= new PDO("mysql:host=localhost;dbname=gestion_EcoSport","root","");
+            $this->unPdo= new PDO("mysql:host=".$serveur.";charset=UTF8;dbname=".$bdd, $user, $mdp);
         }
         catch (PDOException $exp)
         {
-            echo " Impossible de se connecter à la base de données";
+            try {
+                $this->unPdo= new PDO("mysql:host=".$serveur2.";charset=UTF8;dbname=".$bdd, $user, $mdp2);
+            } catch (PDOException $exp) {
+                echo " Impossible de se connecter à la base de données";
+                echo $exp->getMessage();
+            }
         }
     }
 
@@ -203,7 +208,7 @@ class Modele
 
   public function getContenuCommandeById($idCommande) {
     // Récupération du contenu de la commande à partir de la base de données
-    $query = $this->connexion->prepare("SELECT * FROM contenu_commande WHERE idCommande = :idCommande");
+    $query = $this->unPdo->prepare("SELECT * FROM contenu_commande WHERE idCommande = :idCommande");
     $query->execute(array(':idCommande' => $idCommande));
     $contenuCommande = $query->fetchAll();
 

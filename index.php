@@ -1,8 +1,9 @@
 <?php
 session_start(); 
+require_once("controleur/config_bdd.php");
 require_once ("controleur/controleur.class.php");
 //instancier la classe controleur en créant un objet 
-$unControleur = new Controleur(); 
+$unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2); 
 ?>
 
 <!DOCTYPE html>

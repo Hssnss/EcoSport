@@ -7,10 +7,10 @@ class Controleur
     //attribut de cette classe : une instance de la classe Modele
     private $unModele ;
 
-    public function  __construct()
+    public function  __construct($serveur, $serveur2, $bdd, $user, $mdp, $mdp2)
     {
         //ici : on instancie la classe Modele en créant un objet
-        $this->unModele = new Modele ();
+        $this->unModele = new Modele ($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
     }
 
       public function AjouterAuPanier ($user, $article)//modèle pour ajouter un article au panier pour un user
@@ -87,7 +87,7 @@ class Controleur
 
   public function afficherContenuCommande($idCommande) {
     // Récupération du contenu de la commande
-    $contenuCommande = $this->modele->getContenuCommandeById($idCommande);
+    $contenuCommande = $this->unModele->getContenuCommandeById($idCommande);
 
     // Affichage de la vue avec le contenu de la commande
     $this->vue->afficher('contenuCommande.php', array('contenuCommande' => $contenuCommande));

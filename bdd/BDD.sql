@@ -24,6 +24,7 @@ CREATE TABLE user(
 )ENGINE=InnoDB;
 
 
+
 #------------------------------------------------------------
 # Table: Client
 #------------------------------------------------------------
@@ -155,7 +156,7 @@ CREATE TABLE Panier(
 
 
 #------------------------------------------------------------
-# Procedure d'insertion client et création de son panier
+-- # Procedure d'insertion client et création de son panier
 #------------------------------------------------------------
 
 drop procedure  if exists insertClient;
@@ -201,7 +202,7 @@ CREATE TABLE ArticlePanier(
         CONSTRAINT Commander_Article0_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
 )ENGINE=InnoDB;
 
-#Une commande possède plusieurs articles, et les articles se retrouvent dans plusieurs commandes
+-- Une commande possède plusieurs articles, et les articles se retrouvent dans plusieurs commandes
 CREATE TABLE commandearticle(
         idarticle  Int NOT NULL,
         idcommande Int NOT NULL,
@@ -212,7 +213,7 @@ CREATE TABLE commandearticle(
 )ENGINE=InnoDB;
 
 
-#Une vue repertoriant les infos de User, et ce qu'il a comme articles dans son panier. 
+-- Une vue repertoriant les infos de User, et ce qu'il a comme articles dans son panier. 
 drop view if exists UserPanierArticle;
 create view UserPanierArticle as(
     select u.iduser, p.idpanier, ap.idarticle, a.Nom, a.nomImage, a.description, a.prix, ap.quantite from user u, panier p, articlepanier ap, article a where p.iduser=u.iduser and p.idpanier=ap.idpanier and ap.idarticle=a.idarticle
@@ -238,3 +239,7 @@ CREATE VIEW vue_contenucommande AS
 SELECT c.idcommande, c.idarticle, a.Nom, c.quantite, c.prixunitaire
 FROM contenucommande c
 INNER JOIN Article a ON c.idarticle = a.idArticle;
+
+
+INSERT into user values(Null, "a", "a", "a@gmail.com", "123", "Admin");
+INSERT into user values(Null, "b", "b", "b@gmail.com", "123", "Client");
