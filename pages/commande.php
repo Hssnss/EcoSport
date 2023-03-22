@@ -10,7 +10,7 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
 	<title>Shop</title>
 </head>
 <body>
-	<center>
+
 	<h2> Commandes</h2>
 	<?php
 	if ( ! isset($_SESSION['email']))
@@ -30,25 +30,11 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
         }
    
 		$factures = $unControleur->GetCommandes($_SESSION['iduser']);//r�cup�rer la liste des commandes (controlleur)
-        echo '<table>';
-        echo '<tbody>';
-		foreach ($factures as $art)//boucler sur les commandes et g�n�rer le code html d'affichage + bouton d�tail qui redirige vers la page detailcommande avec param�tre idcommande
-        {
-            $datecommande = new DateTime($art['DateCommande']);//convertir en date
-            $dateformatee = $datecommande->format('d/m/Y'); //formater la date pour l'affichage
-            $heureformatee = $datecommande->format('H:i'); //formater l'heure pour l'affichage
-            echo '	
-<td>
-<a href="index.php?page=30&IdCommande=' . $art['IdCommande'] . '&IdArticle='.$art['idarticle'].'">
-Commande numero ' . $art['IdCommande'] . '. Article: '.$art['idarticle'].' (' . $dateformatee . ' a ' . $heureformatee . ')</tr>
-</a>
-</td>
-<br>
-	';
+
+        require_once("vue/vue_commande.php");
             
-        }
-        echo '</tbody>';
-        echo '</table>';
+        
+
         if( count($factures)==0 )//si on a aucune comande afficher un message
         {
             echo 'aucune commande :-(';
@@ -60,5 +46,6 @@ Commande numero ' . $art['IdCommande'] . '. Article: '.$art['idarticle'].' (' . 
 	
     ?>
 	
-	</center>
+
 </body>
+

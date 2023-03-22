@@ -24,10 +24,11 @@ CREATE TABLE user(
 )ENGINE=InnoDB;
 
 
+
 #------------------------------------------------------------
 # Table: Client
 #------------------------------------------------------------
-#Table fille de la table User
+-- Table fille de la table User
 CREATE TABLE Client(
         iduser      Int NOT NULL ,
         siret       Varchar (50) NOT NULL ,
@@ -44,7 +45,7 @@ CREATE TABLE Client(
 #------------------------------------------------------------
 # Table: Admin
 #------------------------------------------------------------
-#Autre table fille de la table User
+-- Autre table fille de la table User
 CREATE TABLE Admin(
         iduser          Int NOT NULL ,
         qualification   Varchar (30) NOT NULL ,
@@ -113,7 +114,7 @@ insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Tee
 # Table: TypeOperations
 #------------------------------------------------------------
 
-//CREATE TABLE TypeOperations(
+CREATE TABLE TypeOperations(
         idtype  Int  Auto_increment  NOT NULL ,
         libelle Varchar (50) NOT NULL
 	,CONSTRAINT TypeOperations_PK PRIMARY KEY (idtype)
@@ -124,7 +125,7 @@ insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Tee
 # Table: Operation
 #------------------------------------------------------------
 
-//CREATE TABLE Operation(
+CREATE TABLE Operation(
         idoperation    Int  Auto_increment  NOT NULL ,
         dateoperation  Date NOT NULL ,
         descriptionop  Varchar (200) NOT NULL ,
@@ -155,7 +156,7 @@ CREATE TABLE Panier(
 
 
 #------------------------------------------------------------
-# Procedure d'insertion client et création de son panier
+-- # Procedure d'insertion client et création de son panier
 #------------------------------------------------------------
 
 drop procedure  if exists insertClient;
@@ -174,7 +175,7 @@ delimiter ;
 # Table: commenter
 #------------------------------------------------------------
 
-//CREATE TABLE commenter(
+CREATE TABLE commenter(
         idArticle Int NOT NULL ,
         iduser    Int NOT NULL ,
         contenu   Text NOT NULL ,
@@ -191,7 +192,7 @@ delimiter ;
 #------------------------------------------------------------
 
 
-#Un user ajoute un article à son panier
+--Un user ajoute un article à son panier
 CREATE TABLE ArticlePanier(
         IdPanier   Int NOT NULL ,
         idArticle  Int NOT NULL,
@@ -201,7 +202,7 @@ CREATE TABLE ArticlePanier(
         CONSTRAINT Commander_Article0_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
 )ENGINE=InnoDB;
 
-#Une commande possède plusieurs articles, et les articles se retrouvent dans plusieurs commandes
+-- Une commande possède plusieurs articles, et les articles se retrouvent dans plusieurs commandes
 CREATE TABLE commandearticle(
         idarticle  Int NOT NULL,
         idcommande Int NOT NULL,
@@ -212,7 +213,7 @@ CREATE TABLE commandearticle(
 )ENGINE=InnoDB;
 
 
-#Une vue repertoriant les infos de User, et ce qu'il a comme articles dans son panier. 
+-- Une vue repertoriant les infos de User, et ce qu'il a comme articles dans son panier. 
 drop view if exists UserPanierArticle;
 create view UserPanierArticle as(
     select u.iduser, p.idpanier, ap.idarticle, a.Nom, a.nomImage, a.description, a.prix, ap.quantite from user u, panier p, articlepanier ap, article a where p.iduser=u.iduser and p.idpanier=ap.idpanier and ap.idarticle=a.idarticle
@@ -238,3 +239,7 @@ CREATE VIEW vue_contenucommande AS
 SELECT c.idcommande, c.idarticle, a.Nom, c.quantite, c.prixunitaire
 FROM contenucommande c
 INNER JOIN Article a ON c.idarticle = a.idArticle;
+
+
+INSERT into user values(Null, "a", "a", "a@gmail.com", "123", "Admin");
+INSERT into user values(Null, "b", "b", "b@gmail.com", "123", "Client");

@@ -1,62 +1,154 @@
 <?php
 
-class Modele
-{
-    private $unPdo ; // attribut de la classe
+class Modele {
 
-    public function __construct ()
+    private $pdo;
+
+    public function __construct($serveur, $serveur2, $bdd, $user, $mdp, $mdp2)
     {
+        $this->pdo = null;
+
         try {
-            $this->unPdo= new PDO("mysql:host=localhost;dbname=gestion_EcoSport","root","");
-        }
-        catch (PDOException $exp)
-        {
-            echo " Impossible de se connecter à la base de données";
+            $this->pdo = new PDO("mysql:host=".$serveur."; charset=UTF8; dbname=".$bdd, $user, $mdp);
+        } catch(PDOException $exp) {
+            try {
+                $this->pdo = new PDO("mysql:host=".$serveur2."; charset=UTF8; dbname=".$bdd, $user, $mdp2);
+            } catch (PDOException $exp) {
+                echo "Erreur de connexion à la base de données";
+                echo $exp->getMessage();
+            }
         }
     }
 
-    public function AjouterClient ($nom, $prenom, $email, $mdp, $role, $siret, $adresse, $telephone)//créer un nouvel utilisateur
+    // User
+
+    public function selectUser($email, $mdp)
     {
-        $requete ="call insertClient(:nom, :prenom, :email, :mdp, :role, :siret, :adresse, :telephone ) ; ";
-        $donnees = array (':nom'=>$nom,
-                          ':prenom'=>$prenom,
-                          ':email'=>$email,
-                          ':mdp'=>$mdp,
-                          ':role'=>$role,
-                          ':siret'=>$siret,
-                          ':adresse'=>$adresse,
-                          ':telephone'=>$telephone );
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
+        $requete = "SELECT * FROM User WHERE email=? AND mdp=?";
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $select  = $this->pdo->prepare($requete);
+            $select->execute(array($email, $mdp));
+            //extraction de un User
+            return $select->fetch();
+        } else {
+            return null;
+        }
     }
 
-    public function verifConnexion ($email,$mdp)//vérificier ue l'utilsateur existe en base avec ce mdp
+        
+    // client
+
+    public function insertClient($tab)
     {
-        $requete ="select * from user where email = :email and mdp = :mdp ; ";
-        $donnees = array (':email'=>$email,
-                          ':mdp'=>$mdp);
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-        $unUser = $select->fetch();
-        return $unUser;
-    }
-    public function getIdPanier($iduser){
-        $requete= "select * from panier where iduser= :iduser;";
-        $donnees= array(
-            ":iduser" => $iduser
+        $requete = "call insertClient(:nom, :email, :mdp, :adresse, :role, :tel, :prenom);";
+        $donnees = array(
+            ":nom" => $tab["nom"],
+            ":email" => $tab["email"],
+            ":mdp" => $tab["mdp"],
+            ":adresse" => $tab["adresse"],
+            ":role" => "Client",
+            ":tel" => $tab["tel"],
+            ":prenom" => $tab["prenom"]
         );
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-        $unPanier = $select->fetch();
-        return $unPanier;
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $insert  = $this->pdo->prepare($requete);
+            $insert->execute($donnees);
+
+        } else {
+            return null;
+        }
+    }
+    
+    // entreprise
+
+    public function insertEntreprise($tab)
+    {
+        $requete = "call insertEntreprise(:nom, :email, :mdp, :adresse, :role, :siret);";
+        $donnees = array(
+            ":nom" => $tab["nom"],
+            ":email" => $tab["email"],
+            ":mdp" => $tab["mdp"],
+            ":adresse" => $tab["adresse"],
+            ":role" => "Entreprise",
+            ":siret" => $tab["siret"]
+        );
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $insert  = $this->pdo->prepare($requete);
+            $insert->execute($donnees);
+
+        } else {
+            return null;
+        }
     }
 
+    public function selectClient($email) {
+        $requete = "SELECT * FROM vueClients where email=?;";
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $select  = $this->pdo->prepare($requete);
+            $select->execute(array($email));
+            //extraction de tous les clients
+            return $select->fetch();
+        } else {
+            return null;
+        }
+    }
+
+    public function selectEntreprise($email) {
+        $requete = "SELECT * FROM vueEntreprise where email=?;";
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $select  = $this->pdo->prepare($requete);
+            $select->execute(array($email));
+            //extraction de tous les clients
+            return $select->fetch();
+        } else {
+            return null;
+        }
+    }
+
+    //categorie
+
+    public function selectAllCategories()//récupérer la liste complète des articles
+    {
+        $requete ="select * from categorie ; ";
+        $select = $this->pdo->prepare($requete);
+        $select->execute();
+        $categories = $select->fetchAll();
+        return $categories;
+    }
+
+    // article
+
+    public function selectAllArticles()//récupérer la liste complète des articles
+    {
+        $requete ="select * from article ; ";
+        $select = $this->pdo->prepare($requete);
+        $select->execute();
+        $articles = $select->fetchAll();
+        return $articles;
+    }
+
+    
+
+    public function recupArticle($idcategorie)//récupérer la liste complète des articles
+    {
+        $requete ="select * from article where idcategorie=:idcategorie;";
+        $donnees = array(':idcategorie'=>$idcategorie);
+        $select = $this->pdo->prepare($requete);
+        $select->execute($donnees);
+        $articles = $select->fetchAll();
+        return $articles;
+    }
 
     public function getArticles()//récupérer la liste complète des articles
     {
         $requete ="select * from article ; ";
         $donnees = array();
-        $select = $this->unPdo->prepare($requete);
+        $select = $this->pdo->prepare($requete);
 
         $select->execute($donnees);
 
@@ -64,69 +156,118 @@ class Modele
         return $articles;
     }
 
-     public function recupArticle($idcategorie)//récupérer la liste complète des articles
+    // panier
+
+    public function getPanier($user)//récupérer le panier d'un user
     {
-        $requete ="select * from article where idcategorie=:idcategorie;";
-        $donnees = array(':idcategorie'=>$idcategorie);
-        $select = $this->unPdo->prepare($requete);
+        $requete ="select * from UserPanierArticle where iduser=:iduser;";
+        //on lie la table panier à la table article par l'idarticle
+        $donnees = array(':iduser'=>$user);
+        $select = $this->pdo->prepare($requete);
 
         $select->execute($donnees);
 
-        $articles = $select->fetchAll ();
-        return $articles;
+        $panierArticles = $select->fetchAll();
+        return $panierArticles;
     }
 
+    public function createPanier($tab) {
+        $requete = "INSERT INTO panier VALUES(null, :iduser, :idcommande);";
+        $donnees = array(
+            ":iduser" => $_SESSION['iduser'],
+            ":idcommande" => $tab["idcommande"]
+        );
+        if ($this->pdo != null) {
+            // on prépare la requete 
+            $insert  = $this->pdo->prepare($requete);
+            $insert->execute($donnees);
+        } else {
+            return null;
+        }
+    }
 
-    public function getCategorie()//récupérer la liste complète des articles
+   
+
+    public function creerCommande($iduser)
     {
-        $requete ="select * from categorie ; ";
-        $donnees = array();
-        $select = $this->unPdo->prepare($requete);
+        $uneCommande = $this->selectCommande($iduser);
+        if ($uneCommande !=null){
+            return $uneCommande; 
+        }else{
+            $requete ="insert into commande  values(null, sysdate(), :iduser);";
+            $donnees = array(':iduser'=>$iduser);
+            $insert = $this->pdo->prepare($requete);
 
-        $select->execute($donnees);
-
-        $categories = $select->fetchAll ();
-        return $categories;
+            $insert->execute($donnees);
+         }   
     }
-
-
-     public function getCommandes($user)//récupérer la liste des commandes d'un user
+	public function selectCommande ($iduser)
     {
-        $requete ="select * from vueCommandes where iduser= :user ; ";
-        $donnees = array(':user'=>$user);
-        $select = $this->unPdo->prepare($requete);
-
-        $select->execute($donnees);
-
-        $articles = $select->fetchAll ();
-        return $articles;
+        $requete ="select * from commande where iduser = ".$iduser.";";
+        
+        $select = $this->pdo->prepare($requete);
+        $select->execute();
+        $uneCommande = $select->fetch();
+        return $uneCommande;
     }
 
-    public function GetDetailCommande($commande)//récupérer la liste des articles d'une commande
+	public function insererArticlePanier ($idcommande, $idarticle)
     {
-        $requete ="select * from contenuCommande join article on contenucommande.idarticle=article.idarticle where idcommande= :commande ; ";
-        //liaison entre la table contenucommande et article
-        $donnees = array(':commande'=>$commande);
-        $select = $this->unPdo->prepare($requete);
+        $requete ="select * from panier where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+        $select = $this->pdo->prepare($requete);
+        $select->execute();
+        $uneLignePanier = $select->fetch();
+        if ($uneLignePanier == null)
+        {
+            $requete ="insert into panier  values(".$idcommande.",".$idarticle.",1);";
+            $insert = $this->pdo->prepare($requete);
+            $insert->execute();
 
-        $select->execute($donnees);
-
-        $articles = $select->fetchAll ();
-        return $articles;
+        }else{
+            $requete ="update panier set quantite =quantite +1 where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+            $insert = $this->pdo->prepare($requete);
+            $insert->execute();
+        }
     }
+
+    public function supprimerPanier($idcommande, $idarticle){ //Suprimme l'article du panier de l'user
+        $requete ="delete from panier where idcommande=:idcommande and idarticle=:idarticle;";
+        $donnees = array(':idcommande'=>$idcommande,
+                          ':idarticle'=>$idarticle);
+        $select = $this->pdo->prepare($requete);
+        $select->execute($donnees);
+    }
+    public function updatePanier($idcommande, $idarticle, $nb)
+    {
+        $requete ="select * from panier where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+        $select = $this->pdo->prepare($requete);
+        $select->execute();
+        $uneLignePanier = $select->fetch();
+        if ($uneLignePanier['quantite'] == 1 and $nb ==-1)
+        {
+            $this->supprimerPanier ($idcommande, $idarticle);
+        }
+        else {
+        $requete ="update panier set quantite =quantite +".$nb. " where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+        $insert = $this->pdo->prepare($requete);
+        $insert->execute();
+        }
+    }
+
+    // commande 
 
     public function validerPanier($user)
     {
         //ajouter dans la table commande
         $requete ="Insert into commande (datecommande, iduser) values (now(), :user) ; ";
         $donnees = array(':user'=>$user);
-        $select = $this->unPdo->prepare($requete);
+        $select = $this->pdo->prepare($requete);
         $select->execute($donnees);
 
 
 
         //récupérer la clé primaire de la commande insérée
-        $idcommande= $this->unPdo->lastInsertId();
+        $idcommande= $this->pdo->lastInsertId();
         $panier=$this->getPanier($user);
         foreach($panier as $article){
             $requete ="insert into commandearticle values(:idarticle, :idcommande, :quantite);";
@@ -135,83 +276,35 @@ class Modele
                 ":idcommande"=>$idcommande,
                 ":quantite"=>$article['quantite']
             );
-            $select = $this->unPdo->prepare($requete);
+            $select = $this->pdo->prepare($requete);
             $select->execute($donnees);
         }
         
 
         $idpanier="select * from panier where iduser=:user;";
         $donnees = array(':user'=>$user);
-        $select = $this->unPdo->prepare($idpanier);
+        $select = $this->pdo->prepare($idpanier);
         $select->execute($donnees);
         $idpanier = $select->fetch();
-
-
-        //vider le panier
-        $requete ="Delete from articlepanier where idpanier = :idpanier ; ";
-        $donnees = array(':idpanier'=>$idpanier['IdPanier']);
-
-        $select = $this->unPdo->prepare($requete);
-
-        $select->execute($donnees);
-
     }
 
-    public function getPanier($user)//récupérer le panier d'un user
+    public function getCommandes($user)//récupérer la liste des commandes d'un user
     {
-        $requete ="select * from UserPanierArticle where iduser=:user;";
-        //on lie la table panier à la table article par l'idarticle
+        $requete ="select * from vueCommandes where iduser= :user ; ";
         $donnees = array(':user'=>$user);
-        $select = $this->unPdo->prepare($requete);
+        $select = $this->pdo->prepare($requete);
 
         $select->execute($donnees);
 
-        $panierArticles = $select->fetchAll();
-        return $panierArticles;
+        $articles = $select->fetchAll ();
+        return $articles;
     }
 
-    public function ajouterPanier($idpanier, $idarticle)//ajouter un article au panier de l'User
-    {
-        $requete ="insert into ArticlePanier values(:idpanier, :idarticle, 1);";
-        $donnees = array(':idpanier'=>$idpanier,
-                          ':idarticle'=>$idarticle);
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-    }
+    
 
-    public function SupprimerDuPanier($idpanier, $idarticle){ //Suprimme l'article du panier de l'user
-        $requete ="delete from articlepanier where idpanier=:idpanier and idarticle=:idarticle;";
-        $donnees = array(':idpanier'=>$idpanier,
-                          ':idarticle'=>$idarticle);
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-    }
-    public function ajoutQuantite($idpanier, $idarticle){
-        $requete ="update ArticlePanier set quantite=quantite+1 where idpanier=:idpanier and idarticle=:idarticle;";
-        $donnees = array(':idpanier'=>$idpanier,
-                          ':idarticle'=>$idarticle);
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-    }
-    public function soustraireQuantite($idpanier, $idarticle){
-        $requete ="update ArticlePanier set quantite=quantite-1 where idpanier=:idpanier and idarticle=:idarticle;";
-        $donnees = array(':idpanier'=>$idpanier,
-                          ':idarticle'=>$idarticle);
-        $select = $this->unPdo->prepare($requete);
-        $select->execute($donnees);
-    }
+    
 
-  public function getContenuCommandeById($idCommande) {
-    // Récupération du contenu de la commande à partir de la base de données
-    $query = $this->connexion->prepare("SELECT * FROM contenu_commande WHERE idCommande = :idCommande");
-    $query->execute(array(':idCommande' => $idCommande));
-    $contenuCommande = $query->fetchAll();
 
-    return $contenuCommande;
-  }
+
 }
-
-
-
-
 ?>

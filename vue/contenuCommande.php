@@ -1,7 +1,7 @@
 <?php
 require_once ("controleur/controleur.class.php");
 //instancier la classe controleur en cr�ant un objet
-$unControleur = new Controleur();
+$unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
 ?>
 <!DOCTYPE html>
 <html>
