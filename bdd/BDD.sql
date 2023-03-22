@@ -28,7 +28,7 @@ CREATE TABLE user(
 #------------------------------------------------------------
 # Table: Client
 #------------------------------------------------------------
-#Table fille de la table User
+-- Table fille de la table User
 CREATE TABLE Client(
         iduser      Int NOT NULL ,
         siret       Varchar (50) NOT NULL ,
@@ -45,7 +45,7 @@ CREATE TABLE Client(
 #------------------------------------------------------------
 # Table: Admin
 #------------------------------------------------------------
-#Autre table fille de la table User
+-- Autre table fille de la table User
 CREATE TABLE Admin(
         iduser          Int NOT NULL ,
         qualification   Varchar (30) NOT NULL ,
@@ -114,7 +114,7 @@ insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Tee
 # Table: TypeOperations
 #------------------------------------------------------------
 
-//CREATE TABLE TypeOperations(
+CREATE TABLE TypeOperations(
         idtype  Int  Auto_increment  NOT NULL ,
         libelle Varchar (50) NOT NULL
 	,CONSTRAINT TypeOperations_PK PRIMARY KEY (idtype)
@@ -125,7 +125,7 @@ insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Tee
 # Table: Operation
 #------------------------------------------------------------
 
-//CREATE TABLE Operation(
+CREATE TABLE Operation(
         idoperation    Int  Auto_increment  NOT NULL ,
         dateoperation  Date NOT NULL ,
         descriptionop  Varchar (200) NOT NULL ,
@@ -175,7 +175,7 @@ delimiter ;
 # Table: commenter
 #------------------------------------------------------------
 
-//CREATE TABLE commenter(
+CREATE TABLE commenter(
         idArticle Int NOT NULL ,
         iduser    Int NOT NULL ,
         contenu   Text NOT NULL ,
@@ -192,7 +192,7 @@ delimiter ;
 #------------------------------------------------------------
 
 
-#Un user ajoute un article à son panier
+--Un user ajoute un article à son panier
 CREATE TABLE ArticlePanier(
         IdPanier   Int NOT NULL ,
         idArticle  Int NOT NULL,

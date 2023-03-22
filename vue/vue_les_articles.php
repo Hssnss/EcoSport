@@ -1,34 +1,38 @@
-<h3> Liste des articles</h3>
+<link rel="stylesheet" href="page.css">
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
-<table>
-    <tr>
-<?php
-    foreach ($lesArticles as $art)//boucler sur les articles et générer le code html d'affichage et créer un bouton ajouter au panier (qui passe l'id de l'article dans l'url et renvoi vers le panier
-        {
-            echo '  
+<div src=images/logo.png class="articles-list">
+  <?php foreach ($lesArticles as $art): ?>
+    <div class="article">
+      <div class="article-image">
+        <img src="images/Articles/<?= $art['image'] ?>" alt="<?= $art['nom'] ?>">
+      </div>
+      <div class="article-details">
+        <h4><?= $art['nom'] ?></h4>
+        <p class="description"><?= $art['description'] ?></p>
+        <p class="price"><?= $art['prix'] ?>€</p>
+       <?php if ($_SESSION['role'] == 'Client'){
+          echo "<a href='index.php?page=1&idcategorie=".$idcategorie."&ajouterArticleId=".$art['idarticle']."' class='btn-add-to-cart'>Ajouter au panier</a>";
+       }
+      ?>
+      </div>
+    </div>
+  <?php endforeach; ?>
 
-             
-            <td>
-                            <figure align="center" width="100%">
-                                    <div class="columnArticle">
-                                    <img class="imageArticle" src="images/Articles/' . $art['NomImage'] . '" >
-                                    <figcaption> ' . $art['Nom'] . ' </figcaption>
-                                    
-                                    <figcaption> ' . $art['Description'] . ' </figcaption>
-                                    
-                                    <figcaption> ' . $art['prix'] . ' </figcaption>
-                                    
-                                    <a href="index.php?page=1&idcategorie='.$idcategorie.'&ajouterArticleId=' . $art['idArticle'] . '"> <img src="images/panier1.png" width="20" height="20"></a>
-                                    </div>
-                            </figure>
-            </td>
+<?php  
+if ($_SESSION['role'] != 'Client'){
+  echo "<a href='index.php?page=1&idcategorie=".$idcategorie."&ajouterArticleId=".$art['idarticle']."' class='btn-add-to-cart'>Ajouter un produit</a>";
+}
 
-
-    ';
-            
-        }
 
 ?>
-    </tr>
-</table>
+
+    
+
+
+</div>
