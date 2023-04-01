@@ -16,8 +16,8 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
     <link rel="stylesheet" href="page.css">
     <title>EcoSport</title>
 </head>
-<img src="" 
-<!--<img src="images/logo.png" >-->
+
+<center><img src="images/logo.png" width=20% ></center>
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
         </style>
@@ -44,9 +44,16 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
                 require_once("pages/home.php");
                 break;
 
-            case 1:
-                require_once("pages/categorie.php");
-                break;
+                case 1: {
+                    if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin') {
+                        require_once("pages/admin.php");
+                    } else {
+                        require_once("pages/categorie.php");
+                    }
+                } break;
+                
+                
+                
 
             case 2:
                 require_once("pages/panier.php");

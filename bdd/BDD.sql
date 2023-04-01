@@ -2,72 +2,47 @@
 #        Script MySQL.
 #------------------------------------------------------------
 
-
-#------------------------------------------------------------
-# Table: user
-#------------------------------------------------------------
-
-
 drop database if exists gestion_EcoSport;
 create database gestion_EcoSport;
 use gestion_EcoSport;
 
+#------------------------------------------------------------
+# Table: User
+#------------------------------------------------------------
 
-CREATE TABLE user(
-        iduser      Int  Auto_increment  NOT NULL ,
-        nom         Varchar (50) NOT NULL ,
-        prenom      Varchar (50) NOT NULL ,
-        email       Varchar (50) NOT NULL ,
-        mdp         Varchar (50) NOT NULL ,
-        role enum('Client', 'Admin') NOT NULL ,
-	CONSTRAINT user_PK PRIMARY KEY (iduser)
+CREATE TABLE User(
+        iduser  Int (5) Auto_increment  NOT NULL ,
+        nom     Varchar (50) NOT NULL ,
+        email   Varchar (50) NOT NULL ,
+        mdp     Varchar (64) NOT NULL ,
+        adresse Varchar (50) NOT NULL ,
+        role    enum ("Client", "Entreprise", "Admin") NOT NULL ,
+        PRIMARY KEY (iduser)
 )ENGINE=InnoDB;
-
 
 
 #------------------------------------------------------------
 # Table: Client
 #------------------------------------------------------------
--- Table fille de la table User
+
 CREATE TABLE Client(
-        iduser      Int NOT NULL ,
-        siret       Varchar (50) NOT NULL ,
-        adresse     Varchar (50) NOT NULL ,
-        telephone   Varchar (50) NOT NULL ,
-
-	CONSTRAINT Client_PK PRIMARY KEY (iduser),
-
-	CONSTRAINT Client_user_FK FOREIGN KEY (iduser) REFERENCES user(iduser)
-)ENGINE=InnoDB;
-
-
-
-#------------------------------------------------------------
-# Table: Admin
-#------------------------------------------------------------
--- Autre table fille de la table User
-CREATE TABLE Admin(
-        iduser          Int NOT NULL ,
-        qualification   Varchar (30) NOT NULL ,
-        anneeexperience Date NOT NULL ,
-
-	CONSTRAINT Admin_PK PRIMARY KEY (iduser),
-
-	CONSTRAINT Admin_user_FK FOREIGN KEY (iduser) REFERENCES user(iduser)
+        iduser   Int(5) NOT NULL ,
+        tel Varchar(50) NOT NULL,
+        prenom   Varchar (50) NOT NULL
+	,PRIMARY KEY (iduser)
+	,FOREIGN KEY (iduser) REFERENCES User(iduser)
 )ENGINE=InnoDB;
 
 
 #------------------------------------------------------------
-# Table: Commande
+# Table: Entreprise
 #------------------------------------------------------------
 
-CREATE TABLE Commande(
-        IdCommande   Int  Auto_increment  NOT NULL ,
-        DateCommande Datetime NOT NULL ,
-        iduser       Int NOT NULL
-	,CONSTRAINT Commande_PK PRIMARY KEY (IdCommande)
-
-	,CONSTRAINT Commande_Client_FK FOREIGN KEY (iduser) REFERENCES Client(iduser)
+CREATE TABLE Entreprise(
+        iduser   Int(5) NOT NULL ,
+        siret    Varchar (50) NOT NULL
+	,PRIMARY KEY (iduser)
+	,FOREIGN KEY (iduser) REFERENCES User(iduser)
 )ENGINE=InnoDB;
 
 
@@ -76,170 +51,158 @@ CREATE TABLE Commande(
 #------------------------------------------------------------
 
 CREATE TABLE Categorie(
-        idcategorie Int  Auto_increment  NOT NULL ,
+        idcategorie Int(3)  Auto_increment  NOT NULL ,
+        image Varchar(50) NOT NULL,
         libelle     Varchar (50) NOT NULL,
-        NomImage     Varchar (50)
-	,CONSTRAINT Categorie_PK PRIMARY KEY (idcategorie)
+	PRIMARY KEY (idcategorie)
 )ENGINE=InnoDB;
 
-insert into Categorie (libelle) values ('chaussure'), ('vetement');
-
+insert into Categorie (image, libelle) values ("logochauss.png", 'chaussure'), ("logovet.png", 'vetement');
+INSERT INTO `categorie` (`idcategorie`, `image`, `libelle`) VALUES (NULL, 'accessoire.png', 'Accessoire');
 #------------------------------------------------------------
 # Table: Article
 #------------------------------------------------------------
 
 CREATE TABLE Article(
-       idArticle   Int  Auto_increment  NOT NULL ,
-        Nom         Varchar (50) ,
-        NomImage varchar(50),
-        Description text,
-        prix        Varchar (100),
-        idcategorie Int NOT NULL
-	,CONSTRAINT Article_PK PRIMARY KEY (idArticle)
-
-	,CONSTRAINT Article_Categorie_FK FOREIGN KEY (idcategorie) REFERENCES Categorie(idcategorie)
+        idarticle      Int(5)  Auto_increment  NOT NULL ,
+        nom            Varchar (50) NOT NULL ,
+        description    Text NOT NULL ,
+        prix           Float NOT NULL ,
+        image          Varchar (50) NOT NULL ,
+        stock          Int NOT NULL ,
+        idcategorie    Int(5) NOT NULL 
+	,PRIMARY KEY (idarticle)
+	,FOREIGN KEY (idcategorie) REFERENCES Categorie(idcategorie)
 )ENGINE=InnoDB;
 
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Airforce', 'Paire de chaussure tendance', 120, 'airforce.png', 30, 1 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance','180 €', 'tn.png', 30, 1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été','35 €', 'Tee-shirt.png', 30,2);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Survetement ', 'survetement nike tendance', 80, 'survet.png', 30, 2 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt Nike', 15, 'Tee-shirt2.png', 30, 2 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jogging', 'Pantalon de survêtement Jogging Adidas Hoodie, jogging, fermeture à glissière', 25, 'pontalon.png', 30, 2 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jogging', 'Pantalon de jogging Nike Femme Vêtements nike blanc,', 25, 'pontalon2.png', 30, 2 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Airforce', 'Paire de chaussure tendance', 120, 'airforce.png', 30, 1 );
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance','180 €', 'tn.png', 30, 1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été','35 €', 'Tee-shirt.png', 30,2);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jordan 4 Jumpman', 'La Air Jordan 4 est un modèle de chaussures de la marque Jordan présenté en 1988 doté d un design unique léger et avec une unité Air visible. Elle a été créé pour améliorer les performances en utilisant un matériau synthétique innovant. Elle est devenue célèbre grâce à un événement sportif en 1989.',390, 'j4.jpg', 30,1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('asics', 'Asics Sport','90', 'asics.png', 30,1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike runing', 'Ideal pour le sport','50', 'nikeruning.png', 30,1);
 #------------------------------------------------------------
-# Insertion : article
-#------------------------------------------------------------
-insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Airforce', 'airforce.png','Paire de chaussure tendance', '120 €', 1);
-insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Nike tn', 'tn.png','Paire de chaussure tendance', '180 €', 1);
-insert into Article (Nom, NomImage, Description, prix, idcategorie) values ('Tee-shirt', 'Tee-shirt.png','Tee-shirt d été', '35 €', 2);
-
-
-
-
-#------------------------------------------------------------
-# Table: TypeOperations
+# Table: Commande
 #------------------------------------------------------------
 
-CREATE TABLE TypeOperations(
-        idtype  Int  Auto_increment  NOT NULL ,
-        libelle Varchar (50) NOT NULL
-	,CONSTRAINT TypeOperations_PK PRIMARY KEY (idtype)
+CREATE TABLE Commande(
+        idcommande   Int(5)  Auto_increment  NOT NULL ,
+        statut enum ('en cours', 'terminer'),
+        DateCommande Datetime NOT NULL ,
+        iduser       Int(5) NOT NULL
+	,PRIMARY KEY (idcommande)
+	,FOREIGN KEY (iduser) REFERENCES Client(iduser)
 )ENGINE=InnoDB;
 
 
+
+
 #------------------------------------------------------------
-# Table: Operation
+# Table: Commenter
 #------------------------------------------------------------
 
-CREATE TABLE Operation(
-        idoperation    Int  Auto_increment  NOT NULL ,
-        dateoperation  Date NOT NULL ,
-        descriptionop  Varchar (200) NOT NULL ,
-        motif          Varchar (30) NOT NULL ,
-        couleur        Varchar (20) NOT NULL ,
-        iduser         Int NOT NULL ,
-        idArticle      Int NOT NULL ,
-        idtype         Int NOT NULL
-	,CONSTRAINT Operation_PK PRIMARY KEY (idoperation)
-
-	,CONSTRAINT Operation_Admin_FK FOREIGN KEY (iduser) REFERENCES Admin(iduser)
-	,CONSTRAINT Operation_Article0_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
-	,CONSTRAINT Operation_TypeOperations1_FK FOREIGN KEY (idtype) REFERENCES TypeOperations(idtype)
+CREATE TABLE Commenter (
+    idcommentaire INT(5) Auto_increment NOT NULL,
+    description TEXT NOT NULL,
+    iduser INT(5) NOT NULL,
+    idarticle INT(5) NOT NULL
+        ,PRIMARY KEY (idcommentaire)
+        ,FOREIGN KEY (iduser) REFERENCES User(iduser)
+        ,FOREIGN KEY (idarticle) REFERENCES Article(idarticle)
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Panier
 #------------------------------------------------------------
 
 CREATE TABLE Panier(
-        IdPanier   Int  Auto_increment  NOT NULL ,
-        iduser     Int NOT NULL
-	,CONSTRAINT Panier_PK PRIMARY KEY (IdPanier)
-
-    ,CONSTRAINT Panier_user_FK FOREIGN KEY (iduser) REFERENCES user(iduser)
-)ENGINE=InnoDB;
-
-
-#------------------------------------------------------------
--- # Procedure d'insertion client et création de son panier
-#------------------------------------------------------------
-
-drop procedure  if exists insertClient;
-delimiter $
-create procedure insertClient(IN p_nom varchar(50), IN p_prenom varchar(50), IN p_email varchar(50), IN p_mdp varchar(50), IN p_role varchar(50), IN p_siret varchar(50), IN p_adresse varchar(50), IN p_telephone varchar(50) )
-Begin
-    declare p_iduser int(3);
-    insert into user values (null, p_nom, p_prenom, p_email, p_mdp, p_role);
-    select iduser into p_iduser from user where nom=p_nom and prenom= p_prenom and email=p_email and mdp=p_mdp and role=p_role;
-    insert into client values (p_iduser, p_siret, p_adresse, p_telephone);
-    insert into panier values (null, p_iduser);
-End $
-delimiter ; 
-
-#------------------------------------------------------------
-# Table: commenter
-#------------------------------------------------------------
-
-CREATE TABLE commenter(
-        idArticle Int NOT NULL ,
-        iduser    Int NOT NULL ,
-        contenu   Text NOT NULL ,
-        note      Int NOT NULL
-	,CONSTRAINT commenter_PK PRIMARY KEY (idArticle,iduser)
-
-	,CONSTRAINT commenter_Article_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
-	,CONSTRAINT commenter_Client0_FK FOREIGN KEY (iduser) REFERENCES Client(iduser)
-)ENGINE=InnoDB;
-
-
-#------------------------------------------------------------
-# Table: commander
-#------------------------------------------------------------
-
-
---Un user ajoute un article à son panier
-CREATE TABLE ArticlePanier(
-        IdPanier   Int NOT NULL ,
+        IdCommande   Int NOT NULL ,
         idArticle  Int NOT NULL,
         quantite int(3),
-        CONSTRAINT Commander_PK PRIMARY KEY (IdPanier,idArticle),
-        CONSTRAINT Commander_Panier_FK FOREIGN KEY (IdPanier) REFERENCES Panier(IdPanier),
-        CONSTRAINT Commander_Article0_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
+        CONSTRAINT Panier_PK PRIMARY KEY (IdCommande,idArticle),
+        CONSTRAINT Panier_Commande_FK FOREIGN KEY (idcommande) REFERENCES Commande(idcommande),
+        CONSTRAINT Panier_Article_FK FOREIGN KEY (idArticle) REFERENCES Article(idArticle)
 )ENGINE=InnoDB;
 
--- Une commande possède plusieurs articles, et les articles se retrouvent dans plusieurs commandes
-CREATE TABLE commandearticle(
-        idarticle  Int NOT NULL,
-        idcommande Int NOT NULL,
-        quantite int(3)
-    ,CONSTRAINT commandearticle_PK PRIMARY KEY (idarticle,idcommande)
-    ,CONSTRAINT commandearticle_Article_FK FOREIGN KEY (idarticle) REFERENCES Article(idarticle)
-    ,CONSTRAINT commandearticle_Commande0_FK FOREIGN KEY (idcommande) REFERENCES Commande(idcommande)
-)ENGINE=InnoDB;
+-- procedure pour insertion d'un clietn 
 
+DROP PROCEDURE IF EXISTS insertClient;
+delimiter $
+create procedure insertClient (IN c_nom varchar(50), IN c_email varchar(50), IN c_mdp varchar(50), 
+IN c_adresse varchar(50), IN c_role varchar(50), IN c_tel varchar(50), IN c_prenom varchar(50)) 
+Begin 
+        Declare c_iduser int(5); 
+        
+        insert into user values (null, c_nom, c_email, c_mdp, c_adresse, c_role ); 
+        select iduser into c_iduser 
+        from user 
+        where nom = c_nom and email =c_email and mdp=c_mdp and adresse = c_adresse; 
+        insert into Client values (c_iduser, c_tel, c_prenom);
+End $
+delimiter  ;
+
+
+-- procedure pour insertion d'une entreprise 
+
+DROP PROCEDURE IF EXISTS insertEntreprise;
+delimiter $
+create procedure insertEntreprise (IN c_nom varchar(50), IN c_email varchar(50), IN c_mdp varchar(50), 
+IN c_adresse varchar(50), IN c_role varchar(50), IN c_siret varchar(50)) 
+Begin 
+        Declare c_iduser int(5); 
+        
+        insert into user values (null, c_nom, c_email, c_mdp, c_adresse, c_role); 
+        select iduser into c_iduser 
+        from user 
+        where nom = c_nom and email =c_email and mdp=c_mdp and adresse = c_adresse; 
+        insert into Entreprise values (c_iduser, c_siret);
+End $
+delimiter  ;
+
+
+
+-- on appelle la procedure insertion client
+call insertClient("Hassan", "Client@gmail.com", "123", "a", "Client", "a", "a");
+
+-- on appelle la procedure insertion entreprise
+call insertEntreprise("ShopHassan", "Entreprise@gmail.com", "123", "e", "Entreprise", "e");
+
+INSERT INTO User (nom, email, mdp, adresse, role) VALUES ('nassar', 'admin@gmail.com', '123', '10 rue tkt', 'Admin');
+
+
+-- vue client
+drop view if exists vueClients;
+create view vueClients as (
+	select u.iduser, u.nom, u.email, u.adresse, c.tel, c.prenom
+	from User u, Client c
+	where u.iduser = c.iduser
+);
+
+-- vue entreprise
+drop view if exists vueEntreprise;
+create view vueEntreprise as (
+	select u.iduser, u.nom, u.email, u.adresse, e.siret
+	from User u, Entreprise e
+	where u.iduser = e.iduser
+);
 
 -- Une vue repertoriant les infos de User, et ce qu'il a comme articles dans son panier. 
 drop view if exists UserPanierArticle;
 create view UserPanierArticle as(
-    select u.iduser, p.idpanier, ap.idarticle, a.Nom, a.nomImage, a.description, a.prix, ap.quantite from user u, panier p, articlepanier ap, article a where p.iduser=u.iduser and p.idpanier=ap.idpanier and ap.idarticle=a.idarticle
+    select u.iduser, p.idcommande, a.idarticle, a.Nom, a.image, a.description, a.prix, p.quantite, c.DateCommande, c.statut
+    from user u, panier p, article a, commande c
+    where c.iduser=u.iduser 
+    and p.idcommande=c.idcommande 
+    and p.idarticle=a.idarticle
 );
 
-drop view if exists vueCommandes;
-create view vueCommandes as(
-    select c.*, ca.idarticle, ca.quantite from commande c, commandearticle ca where c.idcommande=ca.idcommande
-);
 
 
-CREATE TABLE contenucommande(
-        idcommande    Int NOT NULL,
-        idarticle     Int NOT NULL,
-        quantite      Int NOT NULL,
-        prixunitaire  Decimal (10,2) NOT NULL,
-        CONSTRAINT contenucommande_PK PRIMARY KEY (idcommande, idarticle),
-        CONSTRAINT contenucommande_Commande_FK FOREIGN KEY (idcommande) REFERENCES Commande(IdCommande),
-        CONSTRAINT contenucommande_Article_FK FOREIGN KEY (idarticle) REFERENCES Article(idArticle)
-) ENGINE=InnoDB;
 
-CREATE VIEW vue_contenucommande AS
-SELECT c.idcommande, c.idarticle, a.Nom, c.quantite, c.prixunitaire
-FROM contenucommande c
-INNER JOIN Article a ON c.idarticle = a.idArticle;
-
-
-INSERT into user values(Null, "a", "a", "a@gmail.com", "123", "Admin");
-INSERT into user values(Null, "b", "b", "b@gmail.com", "123", "Client");

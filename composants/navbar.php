@@ -27,7 +27,7 @@
         ?>
 
         <?php
-            if(!empty($_SESSION['email'])&&  ($_SESSION['role']=='Client'||$_SESSION['role']=='Admin' )) {
+            if(!empty($_SESSION['email'])&&  ($_SESSION['role']=='Client')) {
                 echo '<li>';
                    echo '<a href="index.php?page=6">Commande</a>';
                 echo '</li>';

@@ -99,6 +99,14 @@ class Controleur
     {
         return $this->unModele->getPanier($user);
     }
+    public function GetPanierCommandeEnCours ($user)//modèle pour récupérer le contenu du panier en cours d'un user
+    {
+        return $this->unModele->GetPanierCommandeEnCours($user);
+    }
+    public function GetPanierCommandeTerminer ($user)//modèle pour récupérer le contenu du panier terminer  d'un user
+    {
+        return $this->unModele->GetPanierCommandeTerminer($user);
+    }
 
     public function ajouterPanier($idarticle){
         $this->unModele->ajouterPanier($idarticle);
@@ -107,6 +115,18 @@ class Controleur
     public function creerCommande($iduser)
     {
         $this->unModele->creerCommande($iduser);
+    }
+    public function terminerCommande($iduser)
+    {
+        $this->unModele->terminerCommande($iduser);
+    }
+    public function selectCommandeEnCours($iduser)
+    {
+        return $this->unModele->selectCommandeEnCours($iduser);
+    }
+    public function selectCommandeTerminer($iduser)
+    {
+        return $this->unModele->selectCommandeTerminer($iduser);
     }
 	public function selectCommande ($iduser)
     {
@@ -138,5 +158,56 @@ class Controleur
         return $commandes;
     }
 
+    //admin
+
+    public function ajouterArticle() {
+        // Vérifiez que l'utilisateur est un administrateur
+        
+        $nom = $_POST["nom"];
+        $description = $_POST["description"];
+        $prix = $_POST["prix"];
+        $image = $_POST["image"];
+        $stock = $_POST["stock"];
+        $idcategorie = $_POST["idcategorie"];
+        
+        $this->articleModel->ajouterArticle($nom, $description, $prix, $image, $stock, $idcategorie);
+        
+        // Rediriger vers une page de confirmation
+    }
     
+    public function supprimerArticle() {
+        // Vérifiez que l'utilisateur est un administrateur
+        
+        $idarticle = $_POST["idarticle"];
+        
+        $this->articleModel->supprimerArticle($idarticle);
+        
+        // Rediriger vers une page de confirmation
+    }
+    
+    public function modifierArticle() {
+        // Vérifiez que l'utilisateur est un administrateur
+        
+        $idarticle = $_POST["idarticle"];
+        $nom = $_POST["nom"];
+        $description = $_POST["description"];
+        $prix = $_POST["prix"];
+        
+        $this->articleModel->modifierArticle($idarticle, $nom, $description, $prix);
+    }
+    
+    //Admin
+        //Créer un article
+    public function insertArticle($tab, $nomImage){
+        $this->unModele->insertArticle($tab, $nomImage);
+    }
+    public function deleteArticle($idArticle){
+        $this->unModele->deleteArticle($idArticle);
+    }
+    public function selectWhereArticle($idArticle){
+        return $this->unModele->selectWhereArticle($idArticle);
+    }
+    public function updateArticle($tab){
+        $this->unModele->updateArticle($tab);
+    }
 }

@@ -114,7 +114,7 @@ class Modele {
 
     public function selectAllCategories()//récupérer la liste complète des articles
     {
-        $requete ="select * from categorie ; ";
+        $requete ="select * from categorie; ";
         $select = $this->pdo->prepare($requete);
         $select->execute();
         $categories = $select->fetchAll();
@@ -170,6 +170,32 @@ class Modele {
         $panierArticles = $select->fetchAll();
         return $panierArticles;
     }
+    //Pour pouvoir n'avoir que la commande en cours dans vue_panier de l'user
+    public function getPanierCommandeEnCours($user)//récupérer le panier d'un user
+    {
+        $requete ="select * from UserPanierArticle where iduser=:iduser and statut='en cours';";
+        //on lie la table panier à la table article par l'idarticle
+        $donnees = array(':iduser'=>$user);
+        $select = $this->pdo->prepare($requete);
+
+        $select->execute($donnees);
+
+        $panierArticles = $select->fetchAll();
+        return $panierArticles;
+    }
+    //Pour dans vue_commande avoir toutes les commandes terminées de l'user
+    public function getPanierCommandeTerminer($user)//récupérer le panier d'un user
+    {
+        $requete ="select * from UserPanierArticle where iduser=:iduser and statut='terminer';";
+        //on lie la table panier à la table article par l'idarticle
+        $donnees = array(':iduser'=>$user);
+        $select = $this->pdo->prepare($requete);
+
+        $select->execute($donnees);
+
+        $panierArticles = $select->fetchAll();
+        return $panierArticles;
+    }
 
     public function createPanier($tab) {
         $requete = "INSERT INTO panier VALUES(null, :iduser, :idcommande);";
@@ -190,17 +216,24 @@ class Modele {
 
     public function creerCommande($iduser)
     {
-        $uneCommande = $this->selectCommande($iduser);
-        if ($uneCommande !=null){
-            return $uneCommande; 
-        }else{
-            $requete ="insert into commande  values(null, sysdate(), :iduser);";
-            $donnees = array(':iduser'=>$iduser);
-            $insert = $this->pdo->prepare($requete);
-
-            $insert->execute($donnees);
-         }   
+        //INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);
+        $requete= "INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);";
+        $donnees = array(':iduser'=>$iduser);
+        $insert = $this->pdo->prepare($requete);
+         $insert->execute($donnees);
+        
     }
+    //Dans le paier on a valider la commande on ferme cette commande
+    public function terminerCommande($idcommande)
+    {
+        //INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);
+        $requete= "update commande set statut='terminer' where idcommande=".$idcommande.";";         
+        $insert = $this->pdo->prepare($requete);
+         $insert->execute();
+        
+    }
+
+    //Récupère toutes les commandes de l'user
 	public function selectCommande ($iduser)
     {
         $requete ="select * from commande where iduser = ".$iduser.";";
@@ -208,7 +241,50 @@ class Modele {
         $select = $this->pdo->prepare($requete);
         $select->execute();
         $uneCommande = $select->fetch();
-        return $uneCommande;
+        //Si la requete possède des enregistrement on retourne les données récupérées
+        if($select->rowCount()>0){
+            return $uneCommande;
+        }
+        else{
+            //Sinon return null
+            return null;
+        }
+    }
+    //Récupère les commandes en cours pour l'user
+    public function selectCommandeEnCours($iduser)
+    {
+        $requete = "SELECT * FROM commande WHERE iduser = :iduser AND statut = 'en cours';";
+    
+        $select = $this->pdo->prepare($requete);
+        $select->bindParam(':iduser', $iduser, PDO::PARAM_INT);
+        $select->execute();
+        $uneCommande = $select->fetch();
+    
+        // Si la requête possède des enregistrements, on retourne les données récupérées
+        if ($select->rowCount() > 0) {
+            return $uneCommande;
+        } else {
+            // Sinon, retourne null
+            return null;
+        }
+    }
+    //Récupère les commandes terminées pour l'user
+    public function selectCommandeTerminer($iduser)
+    {
+        $requete = "SELECT * FROM commande WHERE iduser = :iduser AND statut = 'terminer';";
+    
+        $select = $this->pdo->prepare($requete);
+        $select->bindParam(':iduser', $iduser, PDO::PARAM_INT);
+        $select->execute();
+        $uneCommande = $select->fetch();
+    
+        // Si la requête possède des enregistrements, on retourne les données récupérées
+        if ($select->rowCount() > 0) {
+            return $uneCommande;
+        } else {
+            // Sinon, retourne null
+            return null;
+        }
     }
 
 	public function insererArticlePanier ($idcommande, $idarticle)
@@ -231,14 +307,18 @@ class Modele {
     }
 
     public function supprimerPanier($idcommande, $idarticle){ //Suprimme l'article du panier de l'user
-        $requete ="delete from panier where idcommande=:idcommande and idarticle=:idarticle;";
-        $donnees = array(':idcommande'=>$idcommande,
-                          ':idarticle'=>$idarticle);
+        $idcommande= $idcommande[0]['idcommande'];
+        $requete ="delete from panier where IdCommande=:IdCommande and idArticle=:idArticle;";
+        $donnees = array(':IdCommande'=>$idcommande,
+                          ':idArticle'=>$idarticle);
         $select = $this->pdo->prepare($requete);
         $select->execute($donnees);
     }
+    
     public function updatePanier($idcommande, $idarticle, $nb)
     {
+
+        $idcommande= $idcommande[0]['idcommande'];
         $requete ="select * from panier where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
         $select = $this->pdo->prepare($requete);
         $select->execute();
@@ -260,7 +340,7 @@ class Modele {
     {
         //ajouter dans la table commande
         $requete ="Insert into commande (datecommande, iduser) values (now(), :user) ; ";
-        $donnees = array(':user'=>$user);
+        $donnees = array(':user' => $user['id']);
         $select = $this->pdo->prepare($requete);
         $select->execute($donnees);
 
@@ -300,11 +380,58 @@ class Modele {
         return $articles;
     }
 
-    
+    //admin
+        //Ajouter un article 
+    public function insertArticle($tab, $nomImage){
+        $requete="insert into article values(null, :nom, :description, :prix, '".$nomImage."', :stock, :idcategorie);";
+        $donnees= array(
+            ":nom" => $tab['nom'],
+            ":description" => $tab['description'],
+            ":prix" => $tab['prix'],
+            ":stock" => $tab['stock'],
+            ":idcategorie" => $tab['idcategorie']
+        );
+        $insert=$this->pdo->prepare($requete);
+        $insert->execute($donnees);
+    }
+        //Supprimer l'article
+    public function deleteArticle($idArticle){
+        $requete="delete from article where idarticle=:idarticle;";
+        $donnees= array(
+            ":idarticle" => $idArticle
+        );
+        $select=$this->pdo->prepare($requete);
+        $select->execute($donnees);
+    }
 
-    
+        //Récupérer l'article
+    public function selectWhereArticle($idArticle){
+        $requete="select * from article where idarticle=:idarticle;";
+        $donnees= array(
+            ":idarticle" => $idArticle
+        );
+        $select=$this->pdo->prepare($requete);
+        $select->execute($donnees);
 
-
-
+        $unArticle=$select->fetch();
+        return $unArticle;
+    }
+        //Modifier l'article
+    public function updateArticle($tab){
+        $requete="update article set nom=:nom, description=:description, prix=:prix, image=:nomImage,
+            stock=:stock, idcategorie=:idcategorie where idarticle=:idarticle;";
+        $donnees= array(
+            ":nomImage"=>$tab['nomImage'],
+            ":nom" => $tab['nom'],
+            ":description" => $tab['description'],
+            ":prix" => $tab['prix'],
+            ":stock" => $tab['stock'],
+            ":idcategorie" => $tab['idcategorie'],
+            ":idarticle" => $tab['idarticle']
+        );
+        $select=$this->pdo->prepare($requete);
+        $select->execute($donnees);
+    }
 }
+    
 ?>

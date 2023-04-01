@@ -10,7 +10,13 @@ if (!isset($_SESSION['email'])) {
     {
         $action = $_GET['action'] ;
         $idArticle = $_GET['retirerId'];
-        $idcommande = $_SESSION ['idcommande'];
+        $idcommande = $unControleur->getPanierCommandeEnCours($_SESSION['iduser']);
+        $qteArticle=0;
+        //Si dans l'url de la page la décision existe (on veut retirer un article mais sa quantité est à 1)
+        //On indique à la variable qteArticle pour permettre la condition dans le switch
+        if(isset($_GET['decision'])){
+            $qteArticle=1;
+        }
         switch ($action) {
             case 'sup':
             $unControleur->supprimerPanier($idcommande, $idArticle);
@@ -19,14 +25,21 @@ if (!isset($_SESSION['email'])) {
             case 'plus': 
                 $unControleur->updatePanier($idcommande, $idArticle, 1);
                 break;
-            case 'moins': 
-                    $unControleur->updatePanier($idcommande, $idArticle, -1);
-                    break;
+            case 'moins': {
+                    if($qteArticle==1){
+                        $unControleur->supprimerPanier($idcommande, $idArticle);
+                    }
+                    else{
+                        $unControleur->updatePanier($idcommande, $idArticle, -1);
+                    }
+                }break;
+                    
+                    
             }
     }
    
 
-    $lesArticles = $unControleur->getPanier($_SESSION['iduser']); //r�cup�rer le contenu du panier (controlleur)
+    $lesArticles = $unControleur->getPanierCommandeEnCours($_SESSION['iduser']); //r�cup�rer le contenu du panier (controlleur)
     echo '<table>';
     echo '<tbody>';
 

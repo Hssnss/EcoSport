@@ -39,6 +39,7 @@ if(isset($_POST['InscriptionClient'])) {
   // var_dump($_POST);
   // echo "</pre>";
   $unControleur->insertClient($_POST);
+  header("Location: index.php?page=4");
 }
 
 
