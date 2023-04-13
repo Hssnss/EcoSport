@@ -220,7 +220,7 @@ a:hover {
   }
   
   .article-image img {
-  width: 100%;
+  width: 50%;
   height: auto;
   display: block;
   }
@@ -268,6 +268,7 @@ a:hover {
   display: inline-block;
   padding: 12px 20px;
   background-color: #f70d1a;
+  height: 50px;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
