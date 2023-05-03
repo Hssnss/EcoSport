@@ -140,9 +140,9 @@ IN c_adresse varchar(50), IN c_role varchar(50), IN c_tel varchar(50), IN c_pren
 Begin 
         Declare c_iduser int(5); 
         
-        insert into user values (null, c_nom, c_email, c_mdp, c_adresse, c_role ); 
+        insert into User values (null, c_nom, c_email, c_mdp, c_adresse, c_role ); 
         select iduser into c_iduser 
-        from user 
+        from User 
         where nom = c_nom and email =c_email and mdp=c_mdp and adresse = c_adresse; 
         insert into Client values (c_iduser, c_tel, c_prenom);
 End $
@@ -158,9 +158,9 @@ IN c_adresse varchar(50), IN c_role varchar(50), IN c_siret varchar(50))
 Begin 
         Declare c_iduser int(5); 
         
-        insert into user values (null, c_nom, c_email, c_mdp, c_adresse, c_role); 
+        insert into User values (null, c_nom, c_email, c_mdp, c_adresse, c_role); 
         select iduser into c_iduser 
-        from user 
+        from User 
         where nom = c_nom and email =c_email and mdp=c_mdp and adresse = c_adresse; 
         insert into Entreprise values (c_iduser, c_siret);
 End $
