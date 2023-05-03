@@ -51,9 +51,9 @@ CREATE TABLE Entreprise(
 #------------------------------------------------------------
 
 CREATE TABLE Categorie(
-        idcategorie Int(3)  Auto_increment  NOT NULL ,
+        idcategorie Int(3) auto_increment NOT NULL ,
         image Varchar(50) NOT NULL,
-        libelle     Varchar (50) NOT NULL,
+        libelle Varchar(50) NOT NULL,
 	PRIMARY KEY (idcategorie)
 )ENGINE=InnoDB;
 

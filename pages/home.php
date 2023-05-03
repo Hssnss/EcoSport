@@ -111,7 +111,7 @@
 		<h1 class="heading">EcoSport</h1>
 		<h2 class="subheading">Achetez des produits invendus de marque à des prix avantageux</h2>
 		<div class="feature">
-			<img src="./images/articles/airforce.png" alt="Chaussure Nike">
+			<img src="./images/Articles/airforce.png" alt="Chaussure Nike">
 			<div class="feature-text">
 				<h3 class="feature-heading">Des produits de grande marque</h3>
 				<p class="feature-description">Nous récupérons des articles invendus de grandes marques telles que Nike, Adidas, Puma et bien plus encore. Vous pouvez acheter des vêtements, des chaussures et des accessoires de sport à des prix imbattables.</p>

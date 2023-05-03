@@ -17,15 +17,15 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
     <title>EcoSport</title>
 </head>
 
-<center><img src="images/logo.png" width=20% ></center>
+
+<body>
+    <center><img src="images/logo.png" width=20% ></center>
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
         </style>
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
         </style>
-<body>
-
     <header>
         <?php require_once("composants/navbar.php");  ?>
 
