@@ -197,7 +197,7 @@ create view vueEntreprise as (
 drop view if exists UserPanierArticle;
 create view UserPanierArticle as(
     select u.iduser, p.idcommande, a.idarticle, a.Nom, a.image, a.description, a.prix, p.quantite, c.DateCommande, c.statut
-    from user u, panier p, article a, commande c
+    from User u, Panier p, Article a, Commande c
     where c.iduser=u.iduser 
     and p.idcommande=c.idcommande 
     and p.idarticle=a.idarticle
