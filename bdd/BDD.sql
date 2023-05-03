@@ -58,7 +58,7 @@ CREATE TABLE Categorie(
 )ENGINE=InnoDB;
 
 insert into Categorie (image, libelle) values ("logochauss.png", 'chaussure'), ("logovet.png", 'vetement');
-INSERT INTO `categorie` (`idcategorie`, `image`, `libelle`) VALUES (NULL, 'accessoire.png', 'Accessoire');
+INSERT INTO `Categorie` (`idcategorie`, `image`, `libelle`) VALUES (NULL, 'accessoire.png', 'Accessoire');
 #------------------------------------------------------------
 # Table: Article
 #------------------------------------------------------------
@@ -76,15 +76,15 @@ CREATE TABLE Article(
 )ENGINE=InnoDB;
 
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Airforce', 'Paire de chaussure tendance', 120, 'airforce.png', 30, 1 );
-insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance','180 €', 'tn.png', 30, 1);
-insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été','35 €', 'Tee-shirt.png', 30,2);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance',180, 'tn.png', 30, 1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été',35, 'Tee-shirt.png', 30,2);
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Survetement ', 'survetement nike tendance', 80, 'survet.png', 30, 2 );
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt Nike', 15, 'Tee-shirt2.png', 30, 2 );
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jogging', 'Pantalon de survêtement Jogging Adidas Hoodie, jogging, fermeture à glissière', 25, 'pontalon.png', 30, 2 );
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jogging', 'Pantalon de jogging Nike Femme Vêtements nike blanc,', 25, 'pontalon2.png', 30, 2 );
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Airforce', 'Paire de chaussure tendance', 120, 'airforce.png', 30, 1 );
-insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance','180 €', 'tn.png', 30, 1);
-insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été','35 €', 'Tee-shirt.png', 30,2);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike tn', 'Paire de chaussure tendance', 180, 'tn.png', 30, 1);
+insert into Article (nom, description, prix, image, stock, idcategorie) values ('Tee-shirt', 'Tee-shirt d été', 35, 'Tee-shirt.png', 30,2);
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Jordan 4 Jumpman', 'La Air Jordan 4 est un modèle de chaussures de la marque Jordan présenté en 1988 doté d un design unique léger et avec une unité Air visible. Elle a été créé pour améliorer les performances en utilisant un matériau synthétique innovant. Elle est devenue célèbre grâce à un événement sportif en 1989.',390, 'j4.jpg', 30,1);
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('asics', 'Asics Sport','90', 'asics.png', 30,1);
 insert into Article (nom, description, prix, image, stock, idcategorie) values ('Nike runing', 'Ideal pour le sport','50', 'nikeruning.png', 30,1);
