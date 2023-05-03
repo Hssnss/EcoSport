@@ -114,7 +114,7 @@ class Modele {
 
     public function selectAllCategories()//récupérer la liste complète des articles
     {
-        $requete ="select * from categorie; ";
+        $requete ="select * from Categorie; ";
         $select = $this->pdo->prepare($requete);
         $select->execute();
         $categories = $select->fetchAll();
@@ -125,7 +125,7 @@ class Modele {
 
     public function selectAllArticles()//récupérer la liste complète des articles
     {
-        $requete ="select * from article ; ";
+        $requete ="select * from Article ; ";
         $select = $this->pdo->prepare($requete);
         $select->execute();
         $articles = $select->fetchAll();
@@ -136,7 +136,7 @@ class Modele {
 
     public function recupArticle($idcategorie)//récupérer la liste complète des articles
     {
-        $requete ="select * from article where idcategorie=:idcategorie;";
+        $requete ="select * from Article where idcategorie=:idcategorie;";
         $donnees = array(':idcategorie'=>$idcategorie);
         $select = $this->pdo->prepare($requete);
         $select->execute($donnees);
@@ -146,7 +146,7 @@ class Modele {
 
     public function getArticles()//récupérer la liste complète des articles
     {
-        $requete ="select * from article ; ";
+        $requete ="select * from Article ; ";
         $donnees = array();
         $select = $this->pdo->prepare($requete);
 
@@ -198,7 +198,7 @@ class Modele {
     }
 
     public function createPanier($tab) {
-        $requete = "INSERT INTO panier VALUES(null, :iduser, :idcommande);";
+        $requete = "INSERT INTO Panier VALUES(null, :iduser, :idcommande);";
         $donnees = array(
             ":iduser" => $_SESSION['iduser'],
             ":idcommande" => $tab["idcommande"]
@@ -217,7 +217,7 @@ class Modele {
     public function creerCommande($iduser)
     {
         //INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);
-        $requete= "INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);";
+        $requete= "INSERT INTO `Commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);";
         $donnees = array(':iduser'=>$iduser);
         $insert = $this->pdo->prepare($requete);
          $insert->execute($donnees);
@@ -227,7 +227,7 @@ class Modele {
     public function terminerCommande($idcommande)
     {
         //INSERT INTO `commande` (`idcommande`, `statut`, `DateCommande`, `iduser`) VALUES (NULL, 'en cours', sysdate(), :iduser);
-        $requete= "update commande set statut='terminer' where idcommande=".$idcommande.";";         
+        $requete= "update Commande set statut='terminer' where idcommande=".$idcommande.";";         
         $insert = $this->pdo->prepare($requete);
          $insert->execute();
         
@@ -236,7 +236,7 @@ class Modele {
     //Récupère toutes les commandes de l'user
 	public function selectCommande ($iduser)
     {
-        $requete ="select * from commande where iduser = ".$iduser.";";
+        $requete ="select * from Commande where iduser = ".$iduser.";";
         
         $select = $this->pdo->prepare($requete);
         $select->execute();
@@ -253,7 +253,7 @@ class Modele {
     //Récupère les commandes en cours pour l'user
     public function selectCommandeEnCours($iduser)
     {
-        $requete = "SELECT * FROM commande WHERE iduser = :iduser AND statut = 'en cours';";
+        $requete = "SELECT * FROM Commande WHERE iduser = :iduser AND statut = 'en cours';";
     
         $select = $this->pdo->prepare($requete);
         $select->bindParam(':iduser', $iduser, PDO::PARAM_INT);
@@ -271,7 +271,7 @@ class Modele {
     //Récupère les commandes terminées pour l'user
     public function selectCommandeTerminer($iduser)
     {
-        $requete = "SELECT * FROM commande WHERE iduser = :iduser AND statut = 'terminer';";
+        $requete = "SELECT * FROM Commande WHERE iduser = :iduser AND statut = 'terminer';";
     
         $select = $this->pdo->prepare($requete);
         $select->bindParam(':iduser', $iduser, PDO::PARAM_INT);
@@ -295,12 +295,12 @@ class Modele {
         $uneLignePanier = $select->fetch();
         if ($uneLignePanier == null)
         {
-            $requete ="insert into panier  values(".$idcommande.",".$idarticle.",1);";
+            $requete ="insert into Panier  values(".$idcommande.",".$idarticle.",1);";
             $insert = $this->pdo->prepare($requete);
             $insert->execute();
 
         }else{
-            $requete ="update panier set quantite =quantite +1 where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+            $requete ="update Panier set quantite =quantite +1 where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
             $insert = $this->pdo->prepare($requete);
             $insert->execute();
         }
@@ -308,7 +308,7 @@ class Modele {
 
     public function supprimerPanier($idcommande, $idarticle){ //Suprimme l'article du panier de l'user
         $idcommande= $idcommande[0]['idcommande'];
-        $requete ="delete from panier where IdCommande=:IdCommande and idArticle=:idArticle;";
+        $requete ="delete from Panier where IdCommande=:IdCommande and idArticle=:idArticle;";
         $donnees = array(':IdCommande'=>$idcommande,
                           ':idArticle'=>$idarticle);
         $select = $this->pdo->prepare($requete);
@@ -319,7 +319,7 @@ class Modele {
     {
 
         $idcommande= $idcommande[0]['idcommande'];
-        $requete ="select * from panier where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+        $requete ="select * from Panier where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
         $select = $this->pdo->prepare($requete);
         $select->execute();
         $uneLignePanier = $select->fetch();
@@ -328,7 +328,7 @@ class Modele {
             $this->supprimerPanier ($idcommande, $idarticle);
         }
         else {
-        $requete ="update panier set quantite =quantite +".$nb. " where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
+        $requete ="update Panier set quantite =quantite +".$nb. " where idcommande = ".$idcommande." and idarticle=".$idarticle.";";
         $insert = $this->pdo->prepare($requete);
         $insert->execute();
         }
@@ -339,7 +339,7 @@ class Modele {
     public function validerPanier($user)
     {
         //ajouter dans la table commande
-        $requete ="Insert into commande (datecommande, iduser) values (now(), :user) ; ";
+        $requete ="Insert into Commande (datecommande, iduser) values (now(), :user) ; ";
         $donnees = array(':user' => $user['id']);
         $select = $this->pdo->prepare($requete);
         $select->execute($donnees);
@@ -361,7 +361,7 @@ class Modele {
         }
         
 
-        $idpanier="select * from panier where iduser=:user;";
+        $idpanier="select * from Panier where iduser=:user;";
         $donnees = array(':user'=>$user);
         $select = $this->pdo->prepare($idpanier);
         $select->execute($donnees);
@@ -383,7 +383,7 @@ class Modele {
     //admin
         //Ajouter un article 
     public function insertArticle($tab, $nomImage){
-        $requete="insert into article values(null, :nom, :description, :prix, '".$nomImage."', :stock, :idcategorie);";
+        $requete="insert into Article values(null, :nom, :description, :prix, '".$nomImage."', :stock, :idcategorie);";
         $donnees= array(
             ":nom" => $tab['nom'],
             ":description" => $tab['description'],
@@ -396,7 +396,7 @@ class Modele {
     }
         //Supprimer l'article
     public function deleteArticle($idArticle){
-        $requete="delete from article where idarticle=:idarticle;";
+        $requete="delete from Article where idarticle=:idarticle;";
         $donnees= array(
             ":idarticle" => $idArticle
         );
@@ -406,7 +406,7 @@ class Modele {
 
         //Récupérer l'article
     public function selectWhereArticle($idArticle){
-        $requete="select * from article where idarticle=:idarticle;";
+        $requete="select * from Article where idarticle=:idarticle;";
         $donnees= array(
             ":idarticle" => $idArticle
         );
@@ -418,7 +418,7 @@ class Modele {
     }
         //Modifier l'article
     public function updateArticle($tab){
-        $requete="update article set nom=:nom, description=:description, prix=:prix, image=:nomImage,
+        $requete="update Article set nom=:nom, description=:description, prix=:prix, image=:nomImage,
             stock=:stock, idcategorie=:idcategorie where idarticle=:idarticle;";
         $donnees= array(
             ":nomImage"=>$tab['nomImage'],
