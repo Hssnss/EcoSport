@@ -80,8 +80,31 @@ $unControleur = new Controleur($serveur, $serveur2, $bdd, $user, $mdp, $mdp2);
     </main>
 
     <footer>
-        <!-- ton bas de page -->
-    </footer>
+    <div class="footer-container">
+        <div class="footer-section footer-logo">
+            <img src="images/logo.png" alt="Logo">
+        </div>
+
+        <div class="footer-section footer-info">
+            <p><strong>Adresse :</strong> 13 rue gogo</p>
+            <p><strong>Téléphone :</strong> +33 6 12 34 56 78</p>
+            <p><strong>Email :</strong> contact@ecosport.com</p>
+        </div>
+
+        <div class="footer-section footer-links">
+
+            <ul>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#">Termes et conditions</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section footer-credits">
+            <p>© 2023 EcoSport. Tous droits réservés.</p>
+        </div>
+    </div>
+</footer>
 </body>
 
 </html>
